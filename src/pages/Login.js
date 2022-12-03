@@ -1,12 +1,8 @@
-import axios from 'axios';
+
 import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom';
 import Navbar from '../layout/Navbar';
 
-export default function Login() {
-
-    let navigate = useNavigate();
-
+export default function Login({ method, logout }) {
     const [user, setUser] = useState({
         email: "",
         password: ""
@@ -22,18 +18,13 @@ export default function Login() {
     const onSubmit = async (e) => {
         e.preventDefault();
 
-        const result = await axios.post("http://localhost:8080/Project1-1.0-SNAPSHOT/api/employee/login", user).catch(error => { alert("Login Failed...Retry") });
-
-        if (result.status === 200) {
-            e.preventDefault();
-            navigate(`/salary/${result.data.employee_id}`);
-        }
+        method(user);
     }
 
 
     return (
         <div>
-            <Navbar heading={"IIITB Salary Modue"} buttonName={"Contact Developer"} buttonLink="/ContactPage" />
+            <Navbar heading={"IIITB Salary Modue"} buttonName={"Made with ❤️ by Gaurang Agarwal"} buttonLink={logout} />
             <div className='Container'>
                 <div className='row'>
                     <div className='col-md-6 offset-md-3 border rounded p-4 mt-2 shadow'>

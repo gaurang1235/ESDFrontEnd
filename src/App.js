@@ -1,29 +1,35 @@
 import './App.css';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import Home from './pages/Home';
-import ContactPage from './pages/ContactPage';
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from './pages/Login';
+import { useState } from 'react';
+import axios from 'axios';
 
 function App() {
 
-  // const [id, setId] = useState(0);
+  const [uid, setId] = useState(0);
+
+  const loginMethod = async (user) => {
+    const result = await axios.post("http://localhost:8080/Project1-1.0-SNAPSHOT/api/employee/login", user).catch(error => { alert("Login Failed...Retry") });
+
+    if (result.status === 200) {
+
+      setId(result.data.employee_id);
+    }
+  }
 
   return (
     <div className="App">
 
-      {/* {
-        id === null &&
-        <Login />
-      } */}
+      {
+        uid === 0 &&
+        <Login method={loginMethod} logout={setId} />
+      }
 
-      <Router>
-        <Routes>
-          <Route exact path="/" element={<Login />} />
-          <Route exact path="/Salary/:id" element={<Home />} />
-          <Route exact path="/ContactPage" element={<ContactPage />} />
-        </Routes>
-      </Router>
+      {
+        uid !== 0 &&
+        <Home id={uid} logout={setId} />
+      }
 
     </div>
   );
